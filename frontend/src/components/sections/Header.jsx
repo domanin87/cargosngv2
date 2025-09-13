@@ -9,7 +9,7 @@ export default function Header(){
     <header className="site-header">
       <div className="container header-inner">
         <div className="brand">
-          <Link to="/" className="brand-link">CargoSNG</Link>
+          <Link to="/" className="brand-link">Транзит СНГ</Link>
         </div>
         <nav className="nav">
           <Link to="/cargo">{t('search')}</Link>
