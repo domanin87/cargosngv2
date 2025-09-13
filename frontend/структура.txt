@@ -1,0 +1,18 @@
+cargosng-fullstack/
+├── src/
+│   ├── components/
+│   │   ├── sections/
+│   │   └── widgets/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── i18n.js
+├── dist/                 # Сгенерируется после сборки
+├── public/
+│   ├── config.json
+│   └── styles.css
+├── index.html
+├── server.js
+├── package.json
+├── vite.config.mjs
+├── Dockerfile
+└── README.md

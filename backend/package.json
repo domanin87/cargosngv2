@@ -1,29 +1,18 @@
-
 {
-  "name": "cargosng-backend-ready",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "migrate": "node migrations/run_migrations.js"
-  },
   "dependencies": {
-    "axios": "^1.5.0",
+    "express": "^4.18.2",
+    "sequelize": "^6.37.3",
+    "pg": "^8.11.3",
+    "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.18.2",
     "helmet": "^7.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.11.3",
-    "pg-format": "^1.0.4",
-    "qrcode": "^1.5.4",
-    "sequelize": "^6.37.3",
     "winston": "^3.8.2",
+    "i18next": "^23.7.6",
+    "i18next-http-middleware": "^4.0.2",
+    "axios": "^1.6.0",
+    "qrcode": "^1.5.4",
+    "ws": "^8.14.2",
     "prom-client": "^14.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
   }
 }

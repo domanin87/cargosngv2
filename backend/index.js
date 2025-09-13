@@ -1,14 +1,20 @@
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const http = require('http');
 const { init, sequelize } = require('./src/models');
 const logger = require('./src/logger');
 const metrics = require('./src/metrics');
+const ChatWebSocketServer = require('./src/websocket');
 
 const app = express();
+const server = http.createServer(app);
+
+// Инициализация WebSocket сервера
+const wss = new ChatWebSocketServer(server);
+
 app.use(helmet());
 app.use(express.json({ limit: '2mb' }));
 
@@ -31,6 +37,9 @@ app.use('/api/v1/auth', require('./src/routes/auth'));
 app.use('/api/v1/cargos', require('./src/routes/cargos'));
 app.use('/api/v1/tariffs', require('./src/routes/tariffs'));
 app.use('/api/v1/payment', require('./src/routes/payment'));
+app.use('/api/v1/orders', require('./src/routes/orders'));
+app.use('/api/v1/tracking', require('./src/routes/tracking'));
+app.use('/api/v1/chats', require('./src/routes/chats'));
 
 // static frontend (optional)
 const dist = path.join(__dirname, 'frontend', 'dist');
@@ -50,7 +59,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 init().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     logger.info('CargoSNG backend ready on port ' + PORT);
   });
 }).catch(e => {
