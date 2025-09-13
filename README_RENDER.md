@@ -60,7 +60,7 @@ DATABASE_URL=postgres://<user>:<password>@<host>:5432/<dbname>?sslmode=require
    - **Start Command:** `npm start`
 3. Перейдите в **Environment** (Environment Variables) и добавьте переменные:
    - `DATABASE_URL` = (строка из Render Database, скопированная ранее)
-   - `JWT_SECRET` = ваша секретная фраза
+   - `JWT_SECRET` = ваша секретная фраза(siga)
    - `PORT` = `5000` (опционально)
    - `BASE_CURRENCY` = `KZT` (опционально)
    - `CURRENCY_API_URL` = `https://api.exchangerate.host/latest`
@@ -70,7 +70,7 @@ DATABASE_URL=postgres://<user>:<password>@<host>:5432/<dbname>?sslmode=require
 
 Проверка:
 ```bash
-curl https://<your-backend>.onrender.com/api/v1/health
+curl https://cargosng-backend-v2.onrender.com/api/v1/health
 ```
 
 ---
