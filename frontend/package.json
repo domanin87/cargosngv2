@@ -11,7 +11,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3"
+    "react-router-dom": "^6.22.3",
+    "axios": "^1.6.0",
+    "i18next": "^23.7.6",
+    "react-i18next": "^13.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
