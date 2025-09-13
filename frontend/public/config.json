@@ -1,3 +1,5 @@
+
 {
-  "API_URL": "https://cargosng-backend.onrender.com"
+  "API_URL": "https://cargosng-backend-v2.onrender.com",
+  "MAP_PROVIDER": "2gis"
 }
