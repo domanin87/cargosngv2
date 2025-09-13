@@ -1,8 +1,12 @@
+import React from 'react';
 
-import Home from './pages/Home.jsx';
-import Auth from './pages/Auth.jsx';
-export default function App(){
-  const hash = location.hash || '#/';
-  if(hash.startsWith('#/auth')) return <Auth/>;
-  return <Home/>;
+export default function App() {
+  const apiUrl = window.APP_CONFIG?.API_URL || "http://localhost:5000";
+  return (
+    <div style={{ fontFamily: 'Arial', padding: '2rem' }}>
+      <h1>CargoSNG Frontend</h1>
+      <p>API URL: {apiUrl}</p>
+      <p>Фронтенд успешно работает 🚀</p>
+    </div>
+  );
 }
