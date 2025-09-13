@@ -1,9 +1,11 @@
 
 const router = require('express').Router();
 const { Cargo } = require('../models');
+const logger = require('../logger');
 
-router.post('/create', async (req,res)=>{
-  try{
+// create cargo
+router.post('/create', async (req, res) => {
+  try {
     const p = req.body;
     const c = await Cargo.create({
       title: p.title || 'title',
@@ -17,16 +19,28 @@ router.post('/create', async (req,res)=>{
       currency: p.currency || process.env.BASE_CURRENCY || 'KZT',
       user_id: p.user_id || null
     });
-    res.status(201).json({ success:true, cargo:c });
-  }catch(e){ console.error(e); res.status(500).json({ error:'create_failed' }); }
+    res.status(201).json({ success: true, cargo: c });
+  } catch (e) {
+    logger.error('create cargo failed', e);
+    res.status(500).json({ error: 'create_failed' });
+  }
 });
 
-router.get('/list', async (req,res)=>{
-  try{
-    const list = await Cargo.findAll({ order:[['created_at','DESC']] });
-    const mapped = list.map(c=>({ id:c.id, title:c.title, price:c.price, currency:c.currency, origin:c.origin_country, dest:c.dest_country, status:c.status, createdAt:c.created_at }));
+// list cargos with simple filters
+router.get('/list', async (req, res) => {
+  try {
+    const where = {};
+    if (req.query.from) where.origin_country = req.query.from;
+    if (req.query.to) where.dest_country = req.query.to;
+    const list = await Cargo.findAll({ where, order: [['created_at', 'DESC']] });
+    const mapped = list.map(c => ({
+      id: c.id, title: c.title, price: c.price, currency: c.currency, origin: c.origin_country, dest: c.dest_country, status: c.status, createdAt: c.created_at
+    }));
     res.json(mapped);
-  }catch(e){ console.error(e); res.status(500).json({ error:'list_failed' }); }
+  } catch (e) {
+    logger.error('list cargos failed', e);
+    res.status(500).json({ error: 'list_failed' });
+  }
 });
 
 module.exports = router;

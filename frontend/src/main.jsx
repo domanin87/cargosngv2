@@ -1,24 +1,12 @@
-
 import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './styles.css'
-import './i18n.js'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
 
-async function bootstrap() {
-  try {
-    const resp = await fetch('/config.json', { cache: 'no-store' })
-    if (resp.ok) {
-      window.APP_CONFIG = await resp.json()
-    } else {
-      window.APP_CONFIG = {}
-      console.warn('config.json not found, using defaults')
-    }
-  } catch (err) {
-    window.APP_CONFIG = {}
-    console.warn('Failed to load config.json', err)
-  }
-  createRoot(document.getElementById('root')).render(<App />)
-}
-
-bootstrap()
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+)

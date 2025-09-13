@@ -2,31 +2,58 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const path = require('path');
-const { init } = require('./src/models');
-const i18n = require('./src/i18n');
-const errorHandler = require('./src/middleware/error');
+const { init, sequelize } = require('./src/models');
+const logger = require('./src/logger');
+const metrics = require('./src/metrics');
 
 const app = express();
+app.use(helmet());
 app.use(express.json({ limit: '2mb' }));
-app.use(cors({ origin: (process.env.ALLOW_ORIGINS||'*').split(',') }));
-app.use(i18n.middleware.handle(i18n.i18next));
 
-app.get('/api/v1/health', (_req,res)=> res.json({ ok:true, now: Date.now() }));
+// CORS setup - allow origins from env, or all in dev
+const ALLOW = (process.env.ALLOW_ORIGINS || '*').split(',').map(s=>s.trim()).filter(Boolean);
+const corsOptions = ALLOW.length === 0 || ALLOW.includes('*') ? {} : { origin: ALLOW };
+app.use(cors(corsOptions));
+
+// metrics endpoint
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', metrics.register.contentType);
+  res.end(await metrics.register.metrics());
+});
+
+// health
+app.get('/api/v1/health', (_req, res) => res.json({ ok: true, time: Date.now() }));
+
+// routes
 app.use('/api/v1/auth', require('./src/routes/auth'));
 app.use('/api/v1/cargos', require('./src/routes/cargos'));
 app.use('/api/v1/tariffs', require('./src/routes/tariffs'));
-app.use('/api/payment', require('./src/routes/payment'));
+app.use('/api/v1/payment', require('./src/routes/payment'));
 
-// serve frontend if present
-const distPath = path.join(__dirname, '..', 'frontend', 'dist');
-app.use(express.static(distPath));
-app.get('*', (req,res)=> {
-  if(req.path.startsWith('/api')) return res.status(404).json({ error:'not_found' });
-  res.sendFile(path.join(distPath, 'index.html'));
+// static frontend (optional)
+const dist = path.join(__dirname, 'frontend', 'dist');
+app.use(express.static(dist));
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) return res.status(404).json({ error: 'not_found' });
+  if (req.accepts('html')) return res.sendFile(path.join(dist, 'index.html'));
+  res.status(404).end();
+});
+
+// error handler
+app.use((err, req, res, next) => {
+  logger.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'internal_error' });
 });
 
 const PORT = process.env.PORT || 5000;
-init().then(()=> {
-  app.listen(PORT, ()=> console.log('CargoSNG backend listening on', PORT));
-}).catch(e=> { console.error('DB init failed', e); process.exit(1); });
+
+init().then(() => {
+  app.listen(PORT, () => {
+    logger.info('CargoSNG backend ready on port ' + PORT);
+  });
+}).catch(e => {
+  console.error('DB init failed', e);
+  process.exit(1);
+});
