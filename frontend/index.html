@@ -3,43 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CargoSNG Грузоперевозки</title>
+    <title>CargoSNG Frontend</title>
     <link rel="stylesheet" href="/styles.css" />
-    <style>
-      /* Дополнительные стили для обеспечения правильного отображения */
-      .loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-size: 1.5rem;
-      }
-    </style>
   </head>
   <body>
     <div id="root">
-      <div class="loading">Загрузка CargoSNG...</div>
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div>Загрузка CargoSNG...</div>
+      </div>
     </div>
     
-    <script>
+    <script type="module">
       // Загружаем конфиг и помещаем в глобальную переменную
       fetch('/config.json')
         .then(response => response.json())
         .then(config => {
           window.APP_CONFIG = config;
+          // Динамически импортируем main.jsx после загрузки конфигурации
+          import('./src/main.jsx');
         })
         .catch(error => {
           console.error('Ошибка загрузки конфигурации:', error);
           window.APP_CONFIG = { 
             API_URL: 'https://cargosng-backend-v2.onrender.com/api/v1' 
           };
-        })
-        .finally(() => {
-          // Загружаем основное приложение после загрузки конфигурации
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = '/src/main.jsx';
-          document.body.appendChild(script);
+          import('./src/main.jsx');
         });
     </script>
   </body>

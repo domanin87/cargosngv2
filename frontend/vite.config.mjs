@@ -6,4 +6,9 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+  },
+  base: './', // Это важно для корректных путей в production
 })
