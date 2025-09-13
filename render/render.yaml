@@ -1,0 +1,16 @@
+
+services:
+  - type: web
+    name: cargosng-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+  - type: static
+    name: cargosng-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/dist
+databases:
+  - name: cargosng-db
+    engine: postgres
+    version: "15"

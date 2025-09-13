@@ -1,0 +1,1 @@
+document.getElementById('root').innerText='CargoSNG (prod) — API: '+window.VITE_API_URL;

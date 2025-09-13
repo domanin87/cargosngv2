@@ -1,0 +1,32 @@
+
+name: Flutter Build (web + android)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: mobile
+      - name: Build web
+        run: flutter build web --release
+        working-directory: mobile
+      - name: Build Android AAB
+        run: flutter build appbundle --release --dart-define=API_BASE=${{ secrets.API_BASE }}
+        working-directory: mobile
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cargo-builds
+          path: |
+            mobile/build/web
+            mobile/build/app/outputs/bundle/release/*.aab

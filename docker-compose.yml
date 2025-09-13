@@ -1,0 +1,21 @@
+
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: cargosng
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    ports: ["5000:5000"]
+    environment:
+      - DATABASE_URL=postgres://postgres:rootpass@db:5432/cargosng
+    depends_on:
+      - db
+volumes:
+  pgdata:
